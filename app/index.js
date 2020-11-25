@@ -1,4 +1,5 @@
 var getRawBody = require("raw-body");
+var runes = require('runes');
 var http = require("http");
 const logger = require('pino-http')({
     prettyPrint: {
@@ -12,7 +13,8 @@ var server = http.createServer(function (req, res) {
     getRawBody(req)
         .then(function (buf) {
             res.statusCode = 200;
-            res.end(buf.toString().split("").reverse().join(""));
+            let stringRunes = runes(buf.toString());
+            res.end(stringRunes.reverse().join(""));
         })
         .catch(function (err) {
             res.statusCode = 500;

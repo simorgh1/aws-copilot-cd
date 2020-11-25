@@ -26,7 +26,9 @@ stages:
       # Optional: flag for manual approval action before deployment.
       # requires_approval: true
       # Optional: use test commands to validate this stage of your build.
-      # test_commands: [echo 'running tests', make test]
+      test_commands:
+        - npm install --prefix test
+        - APP_URL=http://rever-test-1D7H4JMPNKE2Z-2143966135.eu-central-1.elb.amazonaws.com npm test --prefix test
 
     - # The name of the environment to deploy to.
       name: prod

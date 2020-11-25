@@ -3,6 +3,7 @@
     "http": "^0.0.1-security",
     "pino-http": "^5.3.0",
     "pino-pretty": "^4.3.0",
-    "raw-body": "^2.4.1"
+    "raw-body": "^2.4.1",
+    "runes": "^0.4.3"
   }
 }
