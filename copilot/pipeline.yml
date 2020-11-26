@@ -27,8 +27,8 @@ stages:
       # requires_approval: true
       # Optional: use test commands to validate this stage of your build.
       test_commands:
-        - npm install --prefix test
-        - APP_URL=https://std-t-Publi-1U3SRWM3EK9DJ-1510734767.us-east-1.elb.amazonaws.com npm test --prefix test
+        # - npm install --prefix test
+        # - APP_URL=https://std-t-Publi-1U3SRWM3EK9DJ-1510734767.us-east-1.elb.amazonaws.com npm test --prefix test
 
     - # The name of the environment to deploy to.
       name: prod
