@@ -1,7 +1,7 @@
 var getRawBody = require("raw-body");
 var runes = require('runes');
 var http = require("http");
-const { exit } = require("process");
+
 const logger = require('pino-http')({
     prettyPrint: {
         levelFirst: true
