@@ -1,9 +1,9 @@
-# The manifest for the "reverse" service.
+# The manifest for the "reverser" service.
 # Read the full specification for the "Load Balanced Web Service" type at:
 #  https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/
 
 # Your service name will be used in naming your resources like log groups, ECS services, etc.
-name: reverse
+name: reverser
 # The "architecture" of the service you're running.
 type: Load Balanced Web Service
 
