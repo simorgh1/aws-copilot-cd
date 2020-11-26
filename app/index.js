@@ -1,6 +1,7 @@
 var getRawBody = require("raw-body");
 var runes = require('runes');
 var http = require("http");
+const { exit } = require("process");
 const logger = require('pino-http')({
     prettyPrint: {
         levelFirst: true
@@ -22,9 +23,18 @@ var server = http.createServer(function (req, res) {
         })
 });
 
+console.log("Listening on port 3000 ...");
 server.listen(3000);
 
 // gracefull shutdown
 process.once('SIGTERM', function () {
+    console.log("[SIGTERM] Stopping service ...")
     server.close();
+    process.exit(0);
+});
+
+process.once('SIGINT', function () {
+    console.log("[SIGINT] Stopping service ...")
+    server.close();
+    process.exit(0);
 });
