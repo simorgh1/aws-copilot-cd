@@ -30,7 +30,35 @@ $ copilot --help
 
 # Initializing the application
 
-`copilot app init`
+The first step is to initialize the application which will then create a service (we named it reverser) after creating the app which we named std and is stored in the copilots workspace. This will be followed by creating a test environment. 
+
+`copilot init`
+
+After copilot initialization or deploy commands, I recommend you to visit your cloudformation page in aws console. Copilot creates for each action a dedicated stack which shows the reource creation needed by that command. For example app init, creates a cloudformation stack which creates administration and execution roles which will be used in the upcomming operations.
+
+Environment `test` will be created using it's related stack as well, which includes the vpc, 2 availability zones, the ecs cluster and all related resources. The same is valid for our prod environment. In the cloudformation stacks, you could inspect the created resources or for the case that something goes wrong during creation, you could check the error or why a resource could not be created.
+
+Stacks used for creating the environments have [app]-[env] naming and for a deployment [app]-[env]-[service] naming format. 
+
+After creating the test environment, copilots starts a deployment to the newly created test environment by starting to build your Dockerfile and push it to ECR for the deployment in the ECS. The rellated Task definition will pull the provided docker image and start the service as a container.
+
+When the deployment is finished, copilot prints the url for test load balancer. You could now test it by sending the following command to it:
+
+```bash
+$ curl -d "Hello" http://[TestLoadbalancerDns]
+```
+
+The created service can be inspected by the following command, which will show the environment hardware specification, and the configured service properties:
+
+```bash
+$ copilot svc show
+```
+
+For the current Service status running in the ECS Cluster, use this command:
+
+```bash
+$ copilot svc status
+```
 
 # Adding prod environment
 
@@ -54,7 +82,9 @@ In order to have an automatic release deployment we should use aws codepipeline 
 
 `copilot pipeline init`
 
-Add both environments to the pipeline, then it should detect you git url and current branch. The pipeline wil ask for your github personal access token, please generate one in github in the Settings menu, Developer Settings
+Add both environments to the pipeline, then it should detect you git url and current branch. The pipeline wil ask for your github personal access token, please generate one in github in the Settings menu, Developer Settings.
+
+Copilot will prepare the pipeline for both stages, first test which will run the provided test and if they passed, the deployment will be released to the prod stage.
 
 # CleanUp
 
@@ -66,8 +96,8 @@ In ordder to clean up all created resources during this demo, we should delete t
 
 All mentioned cloudformation stacks could be deleted using copilot commands in the following order:
 
-- `copilot svc delete reverse`
 - `copilot pipeline delete`
+- `copilot svc delete`
 - `copilot env delete --name test`
 - `copilot env delete --name prod`
 - `copilot app delete`

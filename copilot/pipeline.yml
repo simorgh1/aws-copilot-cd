@@ -1,7 +1,7 @@
 # This YAML file defines the relationship and deployment ordering of your environments.
 
 # The name of the pipeline
-name: pipeline-reverse-simorgh1-aws-copilot-cd
+name: pipeline-std-simorgh1-aws-copilot-cd
 
 # The version of the schema used in this template
 version: 1
@@ -14,7 +14,7 @@ source:
   # the artifacts should be sourced from. For example, the GitHub provider
   # has the following properties: repository, branch.
   properties:
-    access_token_secret: github-token-reverse-aws-copilot-cd
+    access_token_secret: github-token-std-aws-copilot-cd
     branch: main
     repository: https://github.com/simorgh1/aws-copilot-cd
 
@@ -26,14 +26,12 @@ stages:
       # Optional: flag for manual approval action before deployment.
       # requires_approval: true
       # Optional: use test commands to validate this stage of your build.
-      test_commands:
-        - npm install --prefix test
-        - APP_URL=http://rever-test-1D7H4JMPNKE2Z-2143966135.eu-central-1.elb.amazonaws.com npm test --prefix test
+      # test_commands: [echo 'running tests', make test]
 
     - # The name of the environment to deploy to.
       name: prod
       # Optional: flag for manual approval action before deployment.
-      # requires_approval: true
+      requires_approval: true
       # Optional: use test commands to validate this stage of your build.
       # test_commands: [echo 'running tests', make test]
 
