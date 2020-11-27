@@ -1,6 +1,7 @@
 var superagent = require("superagent")
 var expect = require("expect")
 
+// set default value if env var API_URL is missing
 const api_url = process.env.API_URL || 'http://localhost:3000'
 
 console.log('api_url is: ', api_url)
