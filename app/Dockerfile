@@ -1,6 +1,6 @@
 FROM node:14 AS build
 WORKDIR /srv
-RUN npm install
+RUN npm install raw-body http pino-http runes pino-pretty
 
 FROM node:14-slim
 WORKDIR /srv
