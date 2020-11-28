@@ -32,9 +32,3 @@ process.once('SIGTERM', function () {
     server.close();
     process.exit(0);
 });
-
-process.once('SIGINT', function () {
-    console.log("[SIGINT] Stopping service ...")
-    server.close();
-    process.exit(0);
-});
