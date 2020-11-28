@@ -1,7 +1,5 @@
 # AWS Copilot auto deployment
 
-[Github source repository](https://github.com/simorgh1/aws-copilot-cd)
-
 # A Simple node.js application
 
 This is a simple node.js application which listens to port 3000 and responds with the reversed incoming body. In order to be able to handle Unicode strings as well, rune library is used.
