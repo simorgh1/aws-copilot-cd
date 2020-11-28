@@ -42,8 +42,6 @@ phases:
         done;
       - ls -lah ./infrastructure
       # Fixing docker hub pull limit issue, for more information: https://aws.amazon.com/premiumsupport/knowledge-center/codebuild-docker-pull-image-error/
-      - echo $dockerhub_username
-      - echo $dockerhub_password
       - docker login -u $dockerhub_username -p $dockerhub_password
       # Concatenate jobs and services into one var for addons
       # If addons exists, upload addons templates to each S3 bucket and write template URL to template config files.
