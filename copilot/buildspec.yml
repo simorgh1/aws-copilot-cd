@@ -8,7 +8,7 @@ phases:
     commands:
       - echo "cd into $CODEBUILD_SRC_DIR"
       - cd $CODEBUILD_SRC_DIR
-      # Download the copilot linux binary.
+      # Download the Copilotlinux binary.
       - wget https://ecs-cli-v2-release.s3.amazonaws.com/copilot-linux-v1.0.0
       - mv ./copilot-linux-v1.0.0 ./copilot-linux
       - chmod +x ./copilot-linux
@@ -20,7 +20,7 @@ phases:
     commands:
       - ls -l
       - export COLOR="false"
-      # First, upgrade the cloudformation stack of every environment.
+      # First, upgrade the CloudFormation stack of every environment.
       - ./copilot-linux env upgrade --all
       # Find all the local services in the workspace.
       - svcs=$(./copilot-linux svc ls --local --json | jq '.services[].name' | sed 's/"//g')
@@ -28,7 +28,7 @@ phases:
       - jobs=$(./copilot-linux job ls --local --json | jq '.jobs[].name' | sed 's/"//g')
       # Find all the environments
       - envs=$(./copilot-linux env ls --json | jq '.environments[].name' | sed 's/"//g')
-      # Generate the cloudformation templates.
+      # Generate the CloudFormation templates.
       # The tag is the build ID but we replaced the colon ':' with a dash '-'.
       - tag=$(sed 's/:/-/g' <<<"$CODEBUILD_BUILD_ID")
       - >
