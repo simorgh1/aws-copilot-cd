@@ -1,5 +1,11 @@
 # AWS Copilot auto deployment
 
+## Requirements
+
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) should be configured
+- [Docker](https://docs.docker.com/engine/install/)
+- [Copilot](https://aws.amazon.com/blogs/containers/introducing-aws-copilot/): Linux installation is explained below.
+
 # A Simple node.js application
 
 This is a simple node.js application which listens to port 3000 and responds with the reversed incoming body. In order to be able to handle Unicode strings as well, rune library is used.
@@ -61,10 +67,22 @@ $ copilot --help
 
 # Initializing the application
 
-The first step is to initialize the application which will then create a service (we named it `reverser`) after creating the app which we named `std` and is stored in the Copilot's workspace.
+The first step is to initialize the application which will then create a service named `reverser`) after creating the app which we named `std` and is stored in the Copilot's workspace. The Service type is Load Balanced Web Service, it shoud use the Dockerfile inside the app folder and deploy it to the test environment.
 
 ```bash
-$ copilot init
+$ copilot init -a std -n reverser -t "Load Balanced Web Service" -d app/Dockerfile --deploy
+```
+
+Print the ECS Cluster in test environment:
+
+```bash
+$ copilot svc show -n reverser
+```
+
+And the current deployment status:
+
+```bash
+$ copilot svc show -n reverser
 ```
 
 # CloudFormation Stacks
@@ -72,11 +90,11 @@ $ copilot init
 After Copilot initialization or deploy commands, I recommend you to visit your CloudFormation page in the AWS console. Copilot creates/uses for each action a dedicated stack using a built-in CloudFormation template which shows the resource creation/update required by that command.
 
 - `copilot app init`: Creates a stack that includes the administration and execution roles provisioning.
-- `copilot env init`: Includes all related resources for a given environment. For example VPC and subnets for 2 availability zones.
-- `copilot svc init`: Creates related resources depending on the type of service. For example Backend or Load balanced web.
+- `copilot env init`: Creates all required resources for a given environment. For example VPC and subnets on 2 availability zones.
+- `copilot svc init`: Creates related resources depending on the type of service. For example *Backend Service* or *Load Balanced Web Serivce* or *Scheduled Job*.
 - `copilot pipeline init`: Creates a CI/CD pipeline. This pipeline asks for including environments in the pipeline, you should add both test and prod environments. A release to production will follow only a successful test deployment.
 
-We selected the service type Load balanced web and Copilot creates the required ECS cluster with all related Task, Service and Task Definition, and a Load balancer. 
+We selected the service type Load Balanced Web Service and Copilot creates the required ECS cluster with all related Task, Service and Task Definition, and a Load balancer. 
 In the CloudFormation stacks, you could inspect the created/updated resources or inspect resource creation errors. 
 
 Stacks used for creating the environments have [app]-[env] naming and for a service deployment [app]-[env]-[service] naming format.
@@ -89,34 +107,23 @@ After deployment is finished, Copilot prints the URL for the test environment. Y
 $ curl -d "Hello" http://[TestLoadbalancerDns]
 ```
 
-The created service can be inspected by the following command, which will show the environment hardware specification and the configured service properties:
-
-```bash
-$ copilot svc show
-```
-
-For the current Service status running in the ECS Cluster, use this command:
-
-```bash
-$ copilot svc status
-```
-
-# Adding the prod environment
+Now we add the prod environment
 
 ```bash
 $ copilot env init --prod --name prod --profile default
 ```
 
-## Deploying to the prod
+And start the deployment to the prod
 
 ```bash
 $ copilot svc deploy --name reverser --env prod
 ```
 
-Now you could check the current service details:
+Again we check the current service details and status:
 
 ```bash
-$ copilot svc show
+$ copilot svc show -n reverser -e prod
+$ copilot svc status -n reverser -e prod
 ```
 
 Or check its logs
@@ -124,6 +131,8 @@ Or check its logs
 ```bash
 $ copilot svc logs -name reverser -env prod --follow
 ```
+
+This was pretty cool, provisioning 2 environments and all required infrastructure for ECS cluster and at the end deployments to both environments, finished under 5 min!
 
 # Application release automation
 
