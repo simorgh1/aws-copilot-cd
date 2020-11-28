@@ -89,9 +89,9 @@ $ copilot svc show -n reverser
 
 After Copilot initialization or deploy commands, I recommend you to visit your CloudFormation page in the AWS console. Copilot creates/uses for each action a dedicated stack using a built-in CloudFormation template which shows the resource creation/update required by that command.
 
-- `copilot app init`: Creates a stack that includes the administration and execution roles provisioning.
-- `copilot env init`: Creates all required resources for a given environment. For example VPC and subnets on 2 availability zones.
-- `copilot svc init`: Creates related resources depending on the type of service. For example *Backend Service* or *Load Balanced Web Serivce* or *Scheduled Job*.
+- `copilot app init`: Creates a stack that includes the administration and execution roles provisioning. [stack:str-infrastructure-roles] [stack:StackSet-std-infrastructure-XYZXYZ]
+- `copilot env init`: Creates all required resources for a given environment. For example VPC and subnets on 2 availability zones. [stack:std-test], [stack:std-prod]
+- `copilot svc init`: Creates related resources depending on the type of service. For example *Backend Service* or *Load Balanced Web Serivce* or *Scheduled Job*. [stack:std-test-reserver], [stack:std-prod-reserver]
 - `copilot pipeline init`: Creates a CI/CD pipeline. This pipeline asks for including environments in the pipeline, you should add both test and prod environments. A release to production will follow only a successful test deployment.
 
 We selected the service type Load Balanced Web Service and Copilot creates the required ECS cluster with all related Task, Service and Task Definition, and a Load balancer. 
@@ -147,6 +147,10 @@ $ copilot pipeline init
 Add both environments to the pipeline, then it should detect your GitHub repository URL and current branch. The pipeline will ask for your GitHub personal access token, please generate one in GitHub in the Settings menu, Developer Settings.
 
 After pushing your changes to GitHub, start the pipeline by the following command:
+
+## Fixing docker pull limit issue
+
+[Docker](https://docs.docker.com/docker-hub/download-rate-limit/) has enabled download pull limit since november, it means during the docker build process, it will try to pull the required image defined in the Dockerfile and it will be blocked by docker hub, so your CodePipline build will fail. In order to fix this, docker should be logged in with your credentials. Please follow the instructions in the [AWS doc](https://aws.amazon.com/premiumsupport/knowledge-center/codebuild-docker-pull-image-error/). I've added the docker login command in the buildspec line 45. You should store your credentials in the Secret Manager and define them in the Build Project as Environment variables. 
 
 ```bash
 $ copilot pipeline update
